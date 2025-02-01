@@ -32,3 +32,8 @@ select tweet_id
 from Tweets
 where length(content) > 15
 
+-- Replace employee id with unique identifier
+
+select EmployeeUNI.unique_id, e.name from Employees as e
+left join EmployeeUNI on E.id = EmployeeUNI.id
+
