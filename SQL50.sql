@@ -37,3 +37,15 @@ where length(content) > 15
 select EmployeeUNI.unique_id, e.name from Employees as e
 left join EmployeeUNI on E.id = EmployeeUNI.id
 
+-- Product sales analysis
+
+SELECT Product.product_name, year, price from Sales
+left join Product on Sales.product_id = Product.product_id
+
+-- Customer who visited but did not make any transactions
+
+select customer_id, count(*) as count_no_trans from Visits
+where visit_id NOT IN (Select visit_id from Transactions)
+group by customer_id
+order by customer_id
+
