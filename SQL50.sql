@@ -49,3 +49,14 @@ where visit_id NOT IN (Select visit_id from Transactions)
 group by customer_id
 order by customer_id
 
+-- Rising temperature
+
+SELECT id
+FROM Weather w1
+WHERE temperature > (
+    SELECT temperature 
+    FROM Weather 
+    WHERE recordDate = DATE_SUB(w1.recordDate, INTERVAL 1 DAY)
+);
+
+
