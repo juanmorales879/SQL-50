@@ -61,14 +61,20 @@ WHERE temperature > (
 
 -- Average time per processing
 
-# Write your MySQL query statement below
-WITH table_summary AS(
-SELECT machine_id, sum(CASE WHEN activity_type = "start" THEN timestamp ELSE 0 end) as start_time,
-sum(CASE WHEN activity_type = "end" THEN timestamp ELSE 0 end) as end_time
-from activity
-group by machine_id) 
+WITH table_summary AS (
+  SELECT 
+    machine_id, 
+    process_id,
+    SUM(CASE WHEN activity_type = 'start' THEN timestamp ELSE 0 END) AS start_time,
+    SUM(CASE WHEN activity_type = 'end' THEN timestamp ELSE 0 END) AS end_time
+  FROM activity
+  GROUP BY machine_id, process_id
+)
 
-SELECT machine_id, ROUND((end_time - start_time) / 2,3) as processing_time
-from table_summary
+SELECT 
+  machine_id, 
+  ROUND(AVG(end_time - start_time), 3) AS processing_time
+FROM table_summary
+GROUP BY machine_id;
 
 
