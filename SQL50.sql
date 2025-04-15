@@ -77,4 +77,21 @@ SELECT
 FROM table_summary
 GROUP BY machine_id;
 
+--- Employee Bonus
+
+SELECT Employee.name, Bonus.bonus
+FROM Employee
+LEFT JOIN Bonus on Employee.empId = Bonus.empId
+WHERE Bonus.bonus < 1000 OR Bonus.bonus is null
+
+-- Students and examinations
+Select s.student_id, s.student_name, sb.subject_name, (count(ex.subject_name)) as attended_exams
+FROM Students s
+CROSS JOIN Subjects sb
+LEFT JOIN Examinations ex on s.student_id = ex.student_id AND sb.subject_name = ex.subject_name
+GROUP by 1,2,3
+order by s.student_id, sb.subject_name
+
+
+
 
