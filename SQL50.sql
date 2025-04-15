@@ -92,6 +92,31 @@ LEFT JOIN Examinations ex on s.student_id = ex.student_id AND sb.subject_name = 
 GROUP by 1,2,3
 order by s.student_id, sb.subject_name
 
+-- Managers
+
+
+WITH tables as (
+    SELECT managerId, count(*) as cc 
+    from Employee  
+    group by 1 
+    HAVING count(*) > 4)  
+
+SELECT name from employee
+inner join tables on employee.id = tables.managerId
+
+-- confirmatio rate
+
+SELECT 
+  s.user_id, 
+  IFNULL(
+    ROUND(
+      SUM(CASE WHEN c.action = 'confirmed' THEN 1 ELSE 0 END) / 
+      NULLIF(SUM(CASE WHEN c.action IN ('timeout', 'confirmed') THEN 1 ELSE 0 END), 0),
+    2),
+  0) AS confirmation_rate
+FROM Signups s
+LEFT JOIN Confirmations c ON c.user_id = s.user_id
+GROUP BY s.user_id;
 
 
 
