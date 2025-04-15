@@ -104,7 +104,7 @@ WITH tables as (
 SELECT name from employee
 inner join tables on employee.id = tables.managerId
 
--- confirmatio rate
+-- confirmation rate
 
 SELECT 
   s.user_id, 
@@ -117,6 +117,13 @@ SELECT
 FROM Signups s
 LEFT JOIN Confirmations c ON c.user_id = s.user_id
 GROUP BY s.user_id;
+
+-- NOT boring movies
+
+SELECT id, movie, description, rating
+FROM Cinema
+WHERE description <> "boring" and mod(id,2) <> 0
+order by rating desc
 
 
 
