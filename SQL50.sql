@@ -125,5 +125,52 @@ FROM Cinema
 WHERE description <> "boring" and mod(id,2) <> 0
 order by rating desc
 
+-- Average selling price
+
+SELECT
+    p.product_id,
+    COALESCE(                                             
+        ROUND(
+            SUM(p.price * i.units)                        
+            / NULLIF(SUM(i.units), 0),                    
+        2),
+    0) AS average_price
+FROM Prices      AS p                                     
+LEFT JOIN UnitsSold AS i
+       ON i.product_id = p.product_id
+      AND i.purchase_date BETWEEN p.start_date AND p.end_date
+GROUP BY
+    p.product_id;
+
+-- Project employees
+
+# Write your MySQL query statement below
+SELECT project_id, 
+        ROUND (
+            sum(e.experience_years) / count(p.employee_id)
+        ,2) as average_years
+FROM Project p
+LEFT JOIN Employee e on e.employee_id = p.employee_id
+group by project_id
+
+-- Contest
+
+WITH total_users AS (                 
+    SELECT COUNT(*) AS total
+    FROM   Users
+)
+SELECT
+    r.contest_id,
+    ROUND(100.0 * COUNT( r.user_id)
+                / t.total, 2)                    AS PERCENTAGE
+FROM   Register r                                
+CROSS  JOIN total_users t                        
+GROUP  BY
+    r.contest_id,
+    t.total
+ORDER BY
+    percentage DESC,
+    r.contest_id ASC
+
 
 
