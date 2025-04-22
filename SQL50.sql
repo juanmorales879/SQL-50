@@ -172,5 +172,74 @@ ORDER BY
     percentage DESC,
     r.contest_id ASC
 
+-- Queries quality
+
+# Write your MySQL query statement below
+SELECT query_name , 
+        Round(    
+            (SUM(rating / position)) / count(*) 
+        ,2)                                         AS quality,
+        ROUND(
+            (100 * 
+                (SUM(CASE WHEN rating < 3 THEN 1 ELSE 0 END) 
+                / 
+                count(*)
+                )
+            )
+        ,2)                                         AS poor_query_percentage
+FROM Queries
+Group by query_name
+
+-- Monthly transactions
+
+SELECT
+    DATE_FORMAT(trans_date, '%Y-%m') AS month,
+    country,
+    COUNT(*) AS trans_count,
+    SUM(state = 'approved') AS approved_count,
+    SUM(amount) AS trans_total_amount,
+    SUM(CASE WHEN state = 'approved' THEN amount ELSE 0 END) AS approved_total_amount
+FROM Transactions
+GROUP BY
+    month, country
+ORDER BY
+    month, country;
+
+-- Inmmediate food delivery
+
+SELECT ROUND(
+         100.0 * AVG(order_date = customer_pref_delivery_date),
+         2
+       ) AS immediate_percentage
+FROM Delivery
+WHERE order_date = (
+    SELECT MIN(order_date)
+    FROM Delivery d2
+    WHERE d2.customer_id = Delivery.customer_id
+);
+
+-- GAME PLAY
+
+WITH first_login AS (
+    SELECT player_id, MIN(event_date) AS first_date
+    FROM Activity
+    GROUP BY player_id
+)
+SELECT
+    ROUND(
+        COUNT(DISTINCT a.player_id) /
+        COUNT(DISTINCT fl.player_id),
+        2
+    ) AS fraction
+FROM first_login fl
+LEFT JOIN Activity a
+       ON a.player_id = fl.player_id
+      AND a.event_date = DATE_ADD(fl.first_date, INTERVAL 1 DAY);
+
+-- Number of subjects
+
+SELECT teacher_id, count(distinct subject_id) as cnt
+from Teacher
+group by teacher_id
 
 
