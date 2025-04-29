@@ -242,4 +242,31 @@ SELECT teacher_id, count(distinct subject_id) as cnt
 from Teacher
 group by teacher_id
 
+-- User activty
+
+Select activity_date as day, count(distinct user_id) as active_users
+FROM activity
+WHERE activity_date BETWEEN '2019-06-28' AND '2019-07-27' 
+GROUP BY activity_date
+    
+-- Product sales analyst
+
+WITH FirstYear AS (
+  SELECT product_id, MIN(year) AS first_year
+  FROM Sales
+  GROUP BY product_id
+)
+SELECT s.product_id, s.year as first_year, s.quantity, s.price
+FROM Sales s
+JOIN FirstYear f
+  ON s.product_id = f.product_id AND s.year = f.first_year;
+
+-- Classes
+
+SELECT class
+FROM Courses
+group by class
+HAVING COUNT(class) >= 5
+
+
 
