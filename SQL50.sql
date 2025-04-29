@@ -268,5 +268,22 @@ FROM Courses
 group by class
 HAVING COUNT(class) >= 5
 
+-- Follower count
+
+SELECT user_id, count(user_id) as followers_count
+FROM Followers
+GROUP by user_id
+order by user_id asc
+
+-- Biggest single number
+
+select(
+SELECT num as num
+FROM MyNumberS
+GROUP BY num
+HAVING count(*) = 1
+ORDER BY num desc
+LIMIT 1) as num
+
 
 
