@@ -285,5 +285,32 @@ HAVING count(*) = 1
 ORDER BY num desc
 LIMIT 1) as num
 
+-- Number of reports
+
+With reports AS (
+    SELECT e.reports_to as Manager_id,
+    COUNT(*) AS Reports,
+    ROUND(AVG(age)) AS age
+    FROM Employees e
+    WHERE e.reports_to IS NOT NULL
+    GROUP BY e.reports_to
+)
+
+SELECT e.employee_id, e.name, r.reports AS reports_count, r.age AS average_age 
+FROM reports r
+JOIN Employees e on e.employee_id = r.manager_id 
+ORDER BY e.employee_id ASC
+
+-- Primary department
+
+SELECT employee_id, department_id
+FROM Employee
+WHERE employee_id IN (
+    SELECT employee_id
+    FROM Employee
+    GROUP BY employee_id
+    HAVING COUNT(*) = 1 OR primary_flag = "Y"
+)
+
 
 
