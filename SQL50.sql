@@ -321,4 +321,10 @@ SELECT x,y,z,
   END AS triangle
 FROM Triangle;
 
+-- Employees whose manager left
+
+SELECT employee_id
+FROM Employees
+WHERE salary < 30000 and manager_id NOT IN ( SELECT employee_id from Employees)
+ORDER BY employee_id ASC
 
