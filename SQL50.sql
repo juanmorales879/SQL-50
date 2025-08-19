@@ -328,3 +328,8 @@ FROM Employees
 WHERE salary < 30000 and manager_id NOT IN ( SELECT employee_id from Employees)
 ORDER BY employee_id ASC
 
+-- fix names in table 
+SELECT user_id, CONCAT(UPPER(SUBSTRING(name,1,1)),LOWER(SUBSTRING(name,2,length(name)))) as name
+FROM Users
+ORDER BY user_id asc
+
