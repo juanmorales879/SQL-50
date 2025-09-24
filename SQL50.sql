@@ -333,3 +333,16 @@ SELECT user_id, CONCAT(UPPER(SUBSTRING(name,1,1)),LOWER(SUBSTRING(name,2,length(
 FROM Users
 ORDER BY user_id asc
 
+-- customer who bought all products
+
+SELECT customer_id
+FROM (
+    SELECT c.customer_id, COUNT(DISTINCT p.product_key) AS CC
+    FROM Customer c
+    JOIN Product p ON c.product_key = p.product_key
+    GROUP BY c.customer_id
+    HAVING COUNT(DISTINCT p.product_key) = (
+  SELECT COUNT(DISTINCT product_key) FROM Product)
+) AS t;
+
+
