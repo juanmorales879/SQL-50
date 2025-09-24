@@ -345,4 +345,16 @@ FROM (
   SELECT COUNT(DISTINCT product_key) FROM Product)
 ) AS t;
 
+-- Consecutive numbers
+
+# Write your MySQL query statement below
+ SELECT DISTINCT num as ConsecutiveNums
+ FROM (
+ SELECT
+    num,
+    LAG(num, 1) OVER (ORDER BY id) AS p1,
+    LAG(num, 2) OVER (ORDER BY id) AS p2
+  FROM Logs) AS T
+  WHERE num = p1 AND num =p2
+
 
